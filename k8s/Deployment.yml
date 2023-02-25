@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-deployment
+  namespace: devops-tools
+  labels:
+    app: jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      serviceAccountName: jenkins-admin
+      containers:
+      - name: jenkins-app
+        image: docker.io/abdelrahman20299/jenkins:v1.1
+        ports:
+          - name: http-port
+            containerPort: 32000
+        volumeMounts:
+          - name: jenkins-vol
+            mountPath: /var/jenkins_vol
+          - name: docker
+            mountPath: /var/run/docker.sock
+      volumes:
+        - name: jenkins-vol
+          emptyDir: {}
+        - name: docker
+          hostPath:
+            path: /var/run/docker.sock
