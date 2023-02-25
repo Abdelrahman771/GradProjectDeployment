@@ -1,5 +1,5 @@
 module "VPC" {
-  source = "./terraformmodules/VPC"
+  source = "./modules/VPC"
   vpc-cidr = "10.0.0.0/16"
   vpc-tag-name = "TerraformProject"
   subnet-cidr-pub = ["10.0.0.0/24","10.0.2.0/24"]
@@ -14,13 +14,13 @@ module "VPC" {
 
 
 module "Eks-Ckuster" {
-  source = "./terraformmodules/EKS"
+  source = "./modules/EKS"
   eks-cluster-subnets-id    = module.VPC.publicSubnets-ids
   eks-node-subnet_ids       = module.VPC.PrivateSubnets-ids
 }
 
 module "Instances" {
-  source                    = "./terraformmodules/Bastion"
+  source                    = "./modules/Bastion"
   instance-type             = "t2.micro"
   publicInstances-tag-name  = "Bastionhost01"
   vpc-id                    = module.VPC.vpcid
